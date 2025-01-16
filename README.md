@@ -2,7 +2,7 @@
 
 Watch the intro video on YouTube:
 
-[![YouTube](http://i.ytimg.com/vi/yozuhu9tep8/hqdefault.jpg)](https://www.youtube.com/watch?v=yozuhu9tep8)
+[![YouTube](https://img.youtube.com/vi/YOzuhU9TEp8/maxresdefault.jpg)](https://www.youtube.com/watch?v=yozuhu9tep8)
 
 - ⚔️ Moves makes it easier than ever to position your windows _juuust_ right.
 - ✨ Hold down your chosen modifier keys and move the mouse. No need to fiddle with 3px wide window edges or far away title bars.
