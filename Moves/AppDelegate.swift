@@ -1,7 +1,6 @@
 import AXSwift
 import Cocoa
 import Defaults
-import LetsMove
 import Settings
 import Sparkle
 
@@ -15,6 +14,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   @IBOutlet var sparkle: SPUStandardUpdaterController!
 
   let statusItem = StatusItem()
+  let windowHandler = WindowHandler()
 
   lazy var preferencesWindowController = SettingsWindowController(
     panes: [
@@ -24,8 +24,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   )
 
   func applicationDidFinishLaunching(_ aNotification: Notification) {
-    PFMoveToApplicationsFolderIfNecessary()
-
     Task {
       for await value in Defaults.updates(.showInMenubar) {
         if value {
@@ -39,8 +37,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     statusItem.handleCheckForUpdates = { self.sparkle.checkForUpdates(nil) }
     statusItem.handlePreferences = { self.preferencesWindowController.show() }
 
-    let windowHandler = WindowHandler()
-    let modifiers = Modifiers { windowHandler.intention = $0 }
+    let modifiers = Modifiers { self.windowHandler.intention = $0 }
 
     Task {
       for await value in Defaults.updates(.accessibilityEnabled) {
@@ -73,5 +70,106 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   func applicationDidBecomeActive(_ notification: Notification) {
     preferencesWindowController.show()
+  }
+
+  // MARK: - URLs
+
+  func application(_ application: NSApplication, open urls: [URL]) {
+    for url in urls {
+      handleURL(url)
+    }
+  }
+
+  private func handleURL(_ url: URL) {
+    guard url.scheme == "moves" else { return }
+
+    guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+      let host = url.host
+    else { return }
+
+    let queryItems = components.queryItems ?? []
+
+    switch host {
+    case "template":
+      let templateName = url.path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+      guard !templateName.isEmpty else { return }
+
+      ActiveWindow.applyTemplate(templateName)
+
+    case "custom":
+      let position: String
+      let command = url.path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+
+      if let positionParam = queryItems.first(where: { $0.name == "position" })?.value,
+        !positionParam.isEmpty
+      {
+        position = positionParam
+      } else if !command.isEmpty {
+        position = command
+      } else {
+        position = "topLeft"
+      }
+
+      // Get screen dimensions for relative calculations
+      let screenRect = NSScreen.main?.visibleFrame ?? .zero
+
+      var width: CGFloat? = nil
+      if let absoluteWidth = queryItems.first(where: { $0.name == "absoluteWidth" })?.value.flatMap(
+        { CGFloat(Double($0) ?? 0) }),
+        absoluteWidth > 0
+      {
+        width = absoluteWidth
+      } else if let relativeWidth = queryItems.first(where: { $0.name == "relativeWidth" })?.value
+        .flatMap({ Double($0) }),
+        relativeWidth > 0
+      {
+        width = CGFloat(relativeWidth) * screenRect.width
+      }
+
+      var height: CGFloat? = nil
+      if let absoluteHeight = queryItems.first(where: { $0.name == "absoluteHeight" })?.value
+        .flatMap({ CGFloat(Double($0) ?? 0) }),
+        absoluteHeight > 0
+      {
+        height = absoluteHeight
+      } else if let relativeHeight = queryItems.first(where: { $0.name == "relativeHeight" })?.value
+        .flatMap({ Double($0) }),
+        relativeHeight > 0
+      {
+        height = CGFloat(relativeHeight) * screenRect.height
+      }
+
+      // Calculate X offset - try absoluteXOffset first, then relativeXOffset
+      var xOffset: CGFloat = 0
+      if let absoluteXOffset = queryItems.first(where: { $0.name == "absoluteXOffset" })?.value
+        .flatMap({ CGFloat(Double($0) ?? 0) })
+      {
+        xOffset = absoluteXOffset
+      } else if let relativeXOffset = queryItems.first(where: { $0.name == "relativeXOffset" })?
+        .value.flatMap({ Double($0) })
+      {
+        xOffset = CGFloat(relativeXOffset) * screenRect.width
+      }
+
+      // Calculate Y offset - try absoluteYOffset first, then relativeYOffset
+      var yOffset: CGFloat = 0
+      if let absoluteYOffset = queryItems.first(where: { $0.name == "absoluteYOffset" })?.value
+        .flatMap({ CGFloat(Double($0) ?? 0) })
+      {
+        yOffset = absoluteYOffset
+      } else if let relativeYOffset = queryItems.first(where: { $0.name == "relativeYOffset" })?
+        .value.flatMap({ Double($0) })
+      {
+        yOffset = CGFloat(relativeYOffset) * screenRect.height
+      }
+
+      // Position the window
+      ActiveWindow.position(
+        position, width: width, height: height, xOffset: xOffset, yOffset: yOffset)
+
+    default:
+      // Handle legacy paths or invalid URLs
+      break
+    }
   }
 }

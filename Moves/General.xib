@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="23727" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22690"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="23727"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -202,7 +202,7 @@
                         </gridCell>
                         <gridCell row="jSN-rX-mvI" column="kUZ-Sh-B2b" id="Thv-19-gQY">
                             <button key="contentView" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cGK-Ag-p9a">
-                                <rect key="frame" x="144" y="195" width="69" height="16"/>
+                                <rect key="frame" x="144" y="195" width="71" height="16"/>
                                 <buttonCell key="cell" type="bevel" title="Enabled" bezelStyle="rounded" image="NSStatusNone" imagePosition="leading" alignment="center" imageScaling="proportionallyDown" inset="2" id="tnn-Ta-z0I">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>

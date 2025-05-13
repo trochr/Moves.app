@@ -1,6 +1,7 @@
 import Cocoa
 import Defaults
 import Settings
+import UniformTypeIdentifiers
 
 enum PlusMinusAction {
   static let plus = 0
@@ -64,7 +65,7 @@ final class ExcludesViewController: NSViewController, SettingsPane {
     openPanel.allowsMultipleSelection = true
     openPanel.canChooseDirectories = false
     openPanel.canChooseFiles = true
-    openPanel.allowedFileTypes = ["app"]
+    openPanel.allowedContentTypes = [UTType.application]
     openPanel.directoryURL = URL(string: "/Applications")
     openPanel.resolvesAliases = true
     openPanel.begin { (result) in

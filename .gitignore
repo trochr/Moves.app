@@ -2,3 +2,5 @@ Carthage/
 *.xcodeproj/xcuserdata/*
 *.xcuserdatad*
 Updates/*
+
+**/.claude/settings.local.json
