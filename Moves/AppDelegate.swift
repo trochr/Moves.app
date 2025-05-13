@@ -94,20 +94,30 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       let templateName = url.path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
       guard !templateName.isEmpty else { return }
 
-      ActiveWindow.applyTemplate(templateName)
+      guard let templateType = TemplateType(rawValue: templateName) else { return }
+      ActiveWindow.applyTemplate(templateType)
 
     case "custom":
-      let position: String
+      let positionString: String
       let command = url.path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
 
       if let positionParam = queryItems.first(where: { $0.name == "position" })?.value,
         !positionParam.isEmpty
       {
-        position = positionParam
+        positionString = positionParam
       } else if !command.isEmpty {
-        position = command
+        positionString = command
       } else {
-        position = "topLeft"
+        positionString = "topLeft"
+      }
+
+      // Convert position string to WindowPosition enum
+      let position: WindowPosition
+      if let validPosition = WindowPosition(rawValue: positionString) {
+        position = validPosition
+      } else {
+        // Default to topLeft if invalid position provided
+        position = .topLeft
       }
 
       // Get screen dimensions for relative calculations
@@ -164,8 +174,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       }
 
       // Position the window
-      ActiveWindow.position(
-        position, width: width, height: height, xOffset: xOffset, yOffset: yOffset)
+      ActiveWindow.customPosition(
+        position: position, width: width, height: height, xOffset: xOffset, yOffset: yOffset)
 
     default:
       // Handle legacy paths or invalid URLs

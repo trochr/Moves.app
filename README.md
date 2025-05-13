@@ -26,7 +26,7 @@ Apply a predefined window template to the active window.
 
 | Category | Templates |
 |----------|-----------|
-| **Full screen** | `toggle-fullscreen`, `maximize`, `maximize-height`, `maximize-width` |
+| **Full screen** | `toggle-fullscreen`, `maximize`, `maximize-height` (keeps x position), `maximize-width` (keeps y position) |
 | **Half screen** | `left-half`, `right-half`, `top-half`, `bottom-half` |
 | **Center & Movement** | `center`, `move-up`, `move-down`, `move-left`, `move-right`, `restore`, `reasonable-size` |
 | **Display management** | `previous-display`, `next-display` |
