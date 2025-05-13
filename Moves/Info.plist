@@ -35,10 +35,10 @@
 	<string>93</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.utilities</string>
-	<key>LSMinimumSystemVersion</key>
-	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>LSBackgroundOnly</key>
 	<true/>
+	<key>LSMinimumSystemVersion</key>
+	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2020 Brainbow. All rights reserved.</string>
 	<key>NSMainStoryboardFile</key>
@@ -50,7 +50,7 @@
 	<key>NSSupportsSuddenTermination</key>
 	<true/>
 	<key>SUFeedURL</key>
-	<string>https://moves-updates.s3.eu-west-1.amazonaws.com/appcast.xml</string>
+	<string>https://mikker.github.io/Moves.app/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>4ZfPYKvzE7b/uYW4B8f2v++7Bry/OmvYHCzl3g936KE=</string>
 </dict>
