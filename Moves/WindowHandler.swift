@@ -109,8 +109,43 @@ class WindowHandler {
   private func resize(_ event: NSEvent) {
     guard let window = self.window else { return }
     guard let size = window.size else { return }
-    let dest = CGSize(width: size.width + event.deltaX, height: size.height + event.deltaY)
-    window.resizeTo(dest)
+    guard let pos = window.position else { return }
+    let mouseY = NSEvent.mouseLocation.y
+    let mouseX = NSEvent.mouseLocation.x
+    let windowTop = pos.y + size.height
+    let windowBottom = pos.y
+    let windowLeft = pos.x
+    let windowRight = pos.x + size.width
+    // Determine which border is closer: top or bottom
+    let distanceToTop = abs(mouseY - windowTop)
+    let distanceToBottom = abs(mouseY - windowBottom)
+    // Determine which border is closer: left or right
+    let distanceToLeft = abs(mouseX - windowLeft)
+    let distanceToRight = abs(mouseX - windowRight)
+    var newHeight = size.height
+    var newY = pos.y
+    if distanceToTop > distanceToBottom {
+      // Closer to top: resize from top edge
+      newHeight = size.height + event.deltaY
+      newY = pos.y
+    } else {
+      // Closer to bottom: resize from bottom edge
+      newHeight = size.height - event.deltaY
+      newY = pos.y + event.deltaY
+    }
+    var newWidth = size.width
+    var newX = pos.x
+    if distanceToLeft < distanceToRight {
+      // Closer to left: resize from left edge
+      newWidth = size.width - event.deltaX
+      newX = pos.x + event.deltaX
+    } else {
+      // Closer to right: resize from right edge
+      newWidth = size.width + event.deltaX
+      newX = pos.x
+    }
+    window.moveTo(CGPoint(x: newX, y: newY))
+    window.resizeTo(CGSize(width: newWidth, height: newHeight))
   }
 
 }
